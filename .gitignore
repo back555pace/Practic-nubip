@@ -1,0 +1,13 @@
+# Залежності Node.js
+node_modules/
+
+# Локальна база даних SQLite 
+*.db
+*.sqlite
+restaurant.db
+
+# Системні файли macOS
+.DS_Store
+
+# Змінні оточення
+.env
