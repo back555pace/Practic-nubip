@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\App;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\AIChatController;
+
+Route::get('/lang/{lang}', function ($lang) {
+    if (in_array($lang, ['ua', 'en'])) {
+        session(['locale' => $lang]);
+    }
+    return redirect()->back();
+});
+
+Route::middleware(['set_locale'])->group(function () {
+    Route::get('/', function () { return view('welcome'); });
+    Route::post('/book', [BookingController::class, 'store'])->name('book.store');
+    Route::post('/ai-chat', [AIChatController::class, 'handle']);
+});
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/bookings', [BookingController::class, 'index']);
+    Route::delete('/admin/bookings/{id}', [BookingController::class, 'destroy']);
+});
