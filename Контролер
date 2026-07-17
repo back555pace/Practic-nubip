@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Booking;
+use Illuminate\Http\Request;
+
+class BookingController extends Controller
+{
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'guests' => 'required|integer|min:1',
+            'booking_time' => 'required|date|after:now',
+        ]);
+
+        Booking::create($validated);
+        return response()->json(['message' => __('Booking created successfully!')]);
+    }
+
+    public function index() 
+    {
+        return view('admin.bookings', ['bookings' => Booking::latest()->get()]);
+    }
+
+    public function destroy($id)
+    {
+        Booking::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'Бронювання успішно видалено!');
+    }
+}
